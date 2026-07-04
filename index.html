@@ -54,6 +54,11 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
   border:.12em solid #33302e;background:#ffd166;box-shadow:0 .2em 0 #33302e;cursor:pointer;color:#4a3a10}
 .bigbtn:active{transform:translateY(.12em);box-shadow:0 .05em 0 #33302e}
 .bigbtn.alt{background:#e9f3fb;color:#3a4a5a}
+.avrow{display:flex;gap:.6em;justify-content:center;margin:.05em 0 .1em}
+.avbtn{font-family:inherit;font-size:1.7em;line-height:1;padding:.12em .32em;border-radius:.6em;
+  border:.12em solid #33302e;background:#fff;box-shadow:0 .18em 0 #33302e;cursor:pointer}
+.avbtn.sel{background:#ffe0ec;box-shadow:0 .18em 0 #33302e,inset 0 0 0 .16em #ff5f8f}
+.avbtn:active{transform:translateY(.12em);box-shadow:0 .05em 0 #33302e}
 </style>
 
 <div id="stage">
@@ -65,7 +70,12 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
   </div>
   <div id="menu">
     <h1>🍩 Tiptoe Treats 🦖</h1>
-    <p class="sub">Stretch your sneaky arm and grab the goodies — but don't touch Mom, Dad, Rusty, Ruby or the bugs!</p>
+    <p class="sub">Stretch your sneaky arm and grab the goodies — but don't touch Mom, Dad, Rusty, Ruby or the grasshoppers!</p>
+    <div class="secLabel">Pick your player</div>
+    <div id="avPick" class="avrow">
+      <button class="avbtn" data-av="boy" aria-label="Play as the boy">🧒</button>
+      <button class="avbtn" data-av="girl" aria-label="Play as the princess">👧</button>
+    </div>
     <div class="secLabel">🏠 Classic</div>
     <div id="gridC" class="grid"></div>
     <div class="secLabel">🌀 Maze</div>
@@ -120,6 +130,17 @@ const LEVELS = [
  {scene:'living', emoji:'🍭',treat:{type:'lolly',x:830,y:262,stand:'shelf'},haz:[{type:'bug',x1:500,y1:225,x2:500,y2:575,speed:135},{type:'bug',x1:650,y1:575,x2:650,y2:225,speed:135},{type:'dog',x:830,y:615,who:'ruby',safe:3.2,warn:.8,active:2.4,r:130}],blockers:[]},
  {scene:'bedroom',emoji:'🦈',treat:{type:'whale',x:860,y:556,stand:'basket'},haz:[{type:'bug',x1:340,y1:225,x2:340,y2:575,speed:125},{type:'dog',x:500,y:615,who:'rusty',safe:3.6,warn:.8,active:2.4,r:115},{type:'dog',x:760,y:615,who:'ruby',safe:4,warn:.8,active:2.4,off:2,r:120}],blockers:[]},
  {scene:'kitchen',emoji:'🏆',treat:{type:'rainbow',x:900,y:556,stand:'basket'},haz:[{type:'parent',x:350,y:615,who:'mom',safe:3,warn:.8,active:2.4,r:120},{type:'parent',x:560,y:615,who:'dad',safe:3.2,warn:.8,active:2.4,off:1.8,r:120},{type:'dog',x:810,y:615,who:'ruby',safe:3.8,warn:.8,active:2.2,off:3,r:118},{type:'bug',x1:690,y1:210,x2:690,y2:500,speed:120}],blockers:[{x:430,y:0,w:210,h:330,kind:'cabinet'}]},
+ /* ----- levels 21-30: harder — tighter windows, more guards, faster hoppers ----- */
+ {scene:'kitchen',emoji:'🧁',treat:{type:'cupcake',x:800,y:452,stand:'table'},haz:[{type:'parent',x:430,y:615,who:'mom',safe:2.8,warn:.7,active:2.4,r:120},{type:'parent',x:640,y:615,who:'dad',safe:2.8,warn:.7,active:2.4,off:1.8,r:120},{type:'bug',x1:885,y1:210,x2:885,y2:470,speed:135}],blockers:[]},
+ {scene:'living', emoji:'🐠',treat:{type:'ray',x:850,y:556,stand:'basket'},haz:[{type:'dog',x:560,y:615,who:'rusty',safe:2.8,warn:.7,active:2.6,r:120},{type:'bug',x1:360,y1:230,x2:360,y2:560,speed:130},{type:'cactus',x:720,y:505}],blockers:[]},
+ {scene:'bedroom',emoji:'🦖',treat:{type:'trex',x:830,y:556,stand:'basket'},haz:[{type:'parent',x:470,y:615,who:'dad',safe:3.2,warn:.7,active:2.0,r:125},{type:'dog',x:700,y:615,who:'ruby',safe:3.2,warn:.7,active:2.0,r:120},{type:'bug',x1:330,y1:225,x2:330,y2:575,speed:125}],blockers:[]},
+ {scene:'kitchen',emoji:'🍪',treat:{type:'cookie',x:815,y:232,stand:'shelf'},haz:[{type:'dog',x:430,y:615,who:'rusty',safe:3.2,warn:.7,active:2.0,r:120},{type:'parent',x:650,y:615,who:'mom',safe:3.2,warn:.7,active:2.0,r:125}],blockers:[{x:545,y:0,w:200,h:290,kind:'cabinet'}]},
+ {scene:'living', emoji:'🍬',treat:{type:'candy',x:800,y:452,stand:'table'},haz:[{type:'bug',x1:470,y1:220,x2:470,y2:575,speed:145},{type:'bug',x1:640,y1:575,x2:640,y2:220,speed:145},{type:'dog',x:890,y:615,who:'ruby',safe:3,warn:.7,active:2.4,r:115}],blockers:[]},
+ {scene:'bedroom',emoji:'🦈',treat:{type:'whale',x:860,y:556,stand:'basket'},haz:[{type:'parent',x:360,y:615,who:'mom',safe:3.2,warn:.7,active:2.0,r:120},{type:'parent',x:560,y:615,who:'dad',safe:3.2,warn:.7,active:2.0,r:120},{type:'dog',x:760,y:615,who:'rusty',safe:3.2,warn:.7,active:2.0,r:118}],blockers:[]},
+ {scene:'kitchen',emoji:'🏆',treat:{type:'rainbow',x:880,y:452,stand:'table'},haz:[{type:'parent',x:360,y:615,who:'mom',safe:3.2,warn:.7,active:2.0,r:120},{type:'parent',x:560,y:615,who:'dad',safe:3.2,warn:.7,active:2.0,r:120},{type:'bug',x1:720,y1:210,x2:720,y2:500,speed:130}],blockers:[{x:430,y:0,w:200,h:300,kind:'cabinet'}]},
+ {scene:'living', emoji:'🍭',treat:{type:'lolly',x:830,y:262,stand:'shelf'},haz:[{type:'bug',x1:500,y1:220,x2:500,y2:575,speed:140},{type:'bug',x1:660,y1:575,x2:660,y2:220,speed:140},{type:'dog',x:840,y:615,who:'ruby',safe:3,warn:.7,active:2.3,r:120}],blockers:[]},
+ {scene:'bedroom',emoji:'🐠',treat:{type:'ray',x:880,y:556,stand:'basket'},haz:[{type:'parent',x:380,y:615,who:'dad',safe:3.2,warn:.7,active:2.0,r:120},{type:'dog',x:600,y:615,who:'rusty',safe:3.2,warn:.7,active:2.0,r:118},{type:'dog',x:770,y:615,who:'ruby',safe:3.2,warn:.7,active:2.0,r:118},{type:'bug',x1:330,y1:230,x2:330,y2:420,speed:130}],blockers:[]},
+ {scene:'kitchen',emoji:'🏆',treat:{type:'rainbow',x:900,y:556,stand:'basket'},haz:[{type:'parent',x:340,y:615,who:'mom',safe:3.2,warn:.7,active:2.0,r:118},{type:'parent',x:540,y:615,who:'dad',safe:3.2,warn:.7,active:2.0,r:118},{type:'dog',x:770,y:615,who:'ruby',safe:3.2,warn:.7,active:2.0,r:118},{type:'bug',x1:690,y1:210,x2:690,y2:500,speed:135}],blockers:[{x:420,y:0,w:200,h:330,kind:'cabinet'}]},
 ];
 
 /* ------------------------------ maze levels -------------------------------- */
@@ -134,6 +155,17 @@ const MAZES = [
  {scene:'playroom',emoji:'🍩',armMax:3000,treat:{type:'donut',x:300,y:112,stand:'none'},haz:[],blockers:[{x:0,y:470,w:752,h:26,kind:'wall'},{x:520,y:300,w:480,h:26,kind:'wall'},{x:0,y:130,w:752,h:26,kind:'wall'}]},
  {scene:'playroom',emoji:'🍬',armMax:3000,treat:{type:'candy',x:300,y:112,stand:'none'},haz:[{type:'bug',x1:880,y1:200,x2:880,y2:450,speed:110},{type:'bug',x1:250,y1:190,x2:250,y2:430,speed:100}],blockers:[{x:0,y:470,w:752,h:26,kind:'wall'},{x:520,y:300,w:480,h:26,kind:'wall'},{x:0,y:130,w:752,h:26,kind:'wall'}]},
  {scene:'playroom',emoji:'🏆',armMax:3400,treat:{type:'rainbow',x:920,y:556,stand:'basket'},haz:[{type:'bug',x1:240,y1:160,x2:240,y2:470,speed:110},{type:'bug',x1:530,y1:250,x2:530,y2:560,speed:120},{type:'dog',x:890,y:615,who:'ruby',safe:4,warn:.9,active:2.2}],blockers:[{x:320,y:0,w:26,h:450,kind:'wall'},{x:460,y:200,w:26,h:415,kind:'wall'},{x:640,y:0,w:26,h:450,kind:'wall'},{x:760,y:200,w:26,h:415,kind:'wall'}]},
+ /* ----- mazes 11-20: longer serpentines, sleepy guards, hoppers to weave past ----- */
+ {scene:'playroom',emoji:'🍩',armMax:3200,treat:{type:'donut',x:900,y:556,stand:'basket'},haz:[],blockers:[{x:300,y:0,w:26,h:430,kind:'wall'},{x:460,y:200,w:26,h:415,kind:'wall'},{x:620,y:0,w:26,h:430,kind:'wall'},{x:780,y:200,w:26,h:415,kind:'wall'}]},
+ {scene:'playroom',emoji:'🍬',armMax:3300,treat:{type:'candy',x:900,y:556,stand:'basket'},haz:[{type:'bug',x1:830,y1:230,x2:830,y2:470,speed:120}],blockers:[{x:300,y:0,w:26,h:430,kind:'wall'},{x:460,y:200,w:26,h:415,kind:'wall'},{x:620,y:0,w:26,h:430,kind:'wall'},{x:780,y:200,w:26,h:415,kind:'wall'}]},
+ {scene:'playroom',emoji:'🧁',armMax:3600,treat:{type:'cupcake',x:920,y:556,stand:'basket'},haz:[],blockers:[{x:200,y:0,w:26,h:430,kind:'wall'},{x:360,y:200,w:26,h:415,kind:'wall'},{x:520,y:0,w:26,h:430,kind:'wall'},{x:680,y:200,w:26,h:415,kind:'wall'},{x:820,y:0,w:26,h:430,kind:'wall'}]},
+ {scene:'playroom',emoji:'🍪',armMax:3600,treat:{type:'cookie',x:920,y:556,stand:'basket'},haz:[{type:'bug',x1:870,y1:230,x2:870,y2:460,speed:120}],blockers:[{x:200,y:0,w:26,h:430,kind:'wall'},{x:360,y:200,w:26,h:415,kind:'wall'},{x:520,y:0,w:26,h:430,kind:'wall'},{x:680,y:200,w:26,h:415,kind:'wall'},{x:820,y:0,w:26,h:430,kind:'wall'}]},
+ {scene:'playroom',emoji:'🦈',armMax:3400,treat:{type:'whale',x:300,y:112,stand:'none'},haz:[{type:'bug',x1:880,y1:200,x2:880,y2:450,speed:120},{type:'bug',x1:250,y1:190,x2:250,y2:430,speed:110}],blockers:[{x:0,y:470,w:752,h:26,kind:'wall'},{x:520,y:300,w:480,h:26,kind:'wall'},{x:0,y:130,w:752,h:26,kind:'wall'}]},
+ {scene:'playroom',emoji:'🦖',armMax:3600,treat:{type:'trex',x:910,y:556,stand:'basket'},haz:[{type:'dog',x:880,y:615,who:'rusty',safe:3.8,warn:.9,active:2.2,r:105}],blockers:[{x:200,y:0,w:26,h:430,kind:'wall'},{x:360,y:200,w:26,h:415,kind:'wall'},{x:520,y:0,w:26,h:430,kind:'wall'},{x:680,y:200,w:26,h:415,kind:'wall'},{x:820,y:0,w:26,h:430,kind:'wall'}]},
+ {scene:'playroom',emoji:'🐠',armMax:3800,treat:{type:'ray',x:910,y:556,stand:'basket'},haz:[],blockers:[{x:140,y:0,w:26,h:430,kind:'wall'},{x:270,y:200,w:26,h:415,kind:'wall'},{x:400,y:0,w:26,h:430,kind:'wall'},{x:530,y:200,w:26,h:415,kind:'wall'},{x:660,y:0,w:26,h:430,kind:'wall'},{x:790,y:200,w:26,h:415,kind:'wall'}]},
+ {scene:'playroom',emoji:'🍭',armMax:3800,treat:{type:'lolly',x:910,y:556,stand:'basket'},haz:[{type:'bug',x1:870,y1:230,x2:870,y2:470,speed:125}],blockers:[{x:140,y:0,w:26,h:430,kind:'wall'},{x:270,y:200,w:26,h:415,kind:'wall'},{x:400,y:0,w:26,h:430,kind:'wall'},{x:530,y:200,w:26,h:415,kind:'wall'},{x:660,y:0,w:26,h:430,kind:'wall'},{x:790,y:200,w:26,h:415,kind:'wall'}]},
+ {scene:'playroom',emoji:'🦈',armMax:3900,treat:{type:'whale',x:910,y:556,stand:'basket'},haz:[{type:'dog',x:820,y:615,who:'ruby',safe:3.6,warn:.9,active:2.2,r:118},{type:'bug',x1:860,y1:230,x2:860,y2:460,speed:125}],blockers:[{x:140,y:0,w:26,h:430,kind:'wall'},{x:270,y:200,w:26,h:415,kind:'wall'},{x:400,y:0,w:26,h:430,kind:'wall'},{x:530,y:200,w:26,h:415,kind:'wall'},{x:660,y:0,w:26,h:430,kind:'wall'},{x:790,y:200,w:26,h:415,kind:'wall'}]},
+ {scene:'playroom',emoji:'🏆',armMax:4000,treat:{type:'rainbow',x:920,y:556,stand:'basket'},haz:[{type:'dog',x:890,y:615,who:'ruby',safe:3.6,warn:.9,active:2.2,r:105},{type:'bug',x1:860,y1:230,x2:860,y2:470,speed:130}],blockers:[{x:140,y:0,w:26,h:430,kind:'wall'},{x:270,y:200,w:26,h:415,kind:'wall'},{x:400,y:0,w:26,h:430,kind:'wall'},{x:530,y:200,w:26,h:415,kind:'wall'},{x:660,y:0,w:26,h:430,kind:'wall'},{x:790,y:200,w:26,h:415,kind:'wall'}]},
 ];
 
 /* ------------------------------ progress --------------------------------- */
@@ -152,6 +184,10 @@ try {
 function saveProg(){ try { localStorage.setItem('tiptoe-v2', JSON.stringify(prog)); } catch (e) {} }
 let MODE = 'c';                               // 'c' classic | 'm' maze
 function cur(){ return MODE === 'c' ? LEVELS : MAZES; }
+
+/* chosen player avatar: 'boy' | 'girl' */
+let avatar = 'boy';
+try { const a = localStorage.getItem('tiptoe-avatar'); if (a === 'boy' || a === 'girl') avatar = a; } catch (e) {}
 
 /* -------------------------------- audio ---------------------------------- */
 let AC = null, muted = false;
@@ -178,6 +214,7 @@ const sndWin   = () => [523, 659, 784, 1047].forEach((f, i) => tone(f, f, .3, 's
 const sndWomp  = () => tone(210, 90, .4, 'sawtooth', .22);
 const sndBark  = () => { tone(430, 140, .1, 'square', .28); tone(390, 120, .1, 'square', .28, .15); };
 const sndBuzz  = () => tone(150, 105, .32, 'square', .2);
+const sndBoing = () => { tone(300, 620, .12, 'triangle', .26); tone(620, 240, .13, 'triangle', .22, .1); };
 const sndHey   = () => { tone(500, 700, .14, 'triangle', .28); tone(660, 880, .18, 'triangle', .28, .15); };
 
 /* ----------------------------- runtime state ------------------------------ */
@@ -224,7 +261,7 @@ function hazCircle(h){
 }
 function failFx(h){
   if (h.type === 'dog'){ sndBark(); return { txt: 'WOOF WOOF!', col: '#c0392b' }; }
-  if (h.type === 'bug'){ sndBuzz(); return { txt: 'Bzzz!', col: '#8e44ad' }; }
+  if (h.type === 'bug'){ sndBoing(); return { txt: 'Boing!', col: '#3f8f3d' }; }
   if (h.type === 'parent'){ sndHey(); return { txt: 'Hey!!', col: '#c0392b' }; }
   if (h.type === 'pot'){ sndWomp(); return { txt: 'Hot hot hot!', col: '#e67e22' }; }
   sndWomp(); return { txt: 'Ouch! Spiky!', col: '#27ae60' };
@@ -690,7 +727,90 @@ function drawSparkle(x, y){
 }
 
 /* ------------------------------ characters -------------------------------- */
-function drawKid(x, y){
+function drawKid(x, y){ return avatar === 'girl' ? drawKidGirl(x, y) : drawKidBoy(x, y); }
+
+/* shared face + mood — used by both avatars (head centered at x+2, y-138, r28) */
+function drawKidFace(x, y){
+  const m = kidMood;
+  if (m === 'oops'){
+    ctx.fillStyle = '#fff'; ell(x + 6, y - 142, 7, 8); ctx.fill(); ell(x + 20, y - 142, 7, 8); ctx.fill();
+    ctx.fillStyle = '#2b2b2b'; ell(x + 6, y - 141, 3, 3.5); ctx.fill(); ell(x + 20, y - 141, 3, 3.5); ctx.fill();
+    ell(x + 12, y - 122, 6, 8); ctx.fill();
+  } else if (m === 'yay' || m === 'grin'){
+    ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(x + 6, y - 143, 5, Math.PI, 0); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x + 20, y - 143, 5, Math.PI, 0); ctx.stroke();
+    ctx.fillStyle = '#8c3b2e';
+    ctx.beginPath(); ctx.arc(x + 12, y - 128, 10, 0, Math.PI); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#ff9d9d'; ell(x + 12, y - 121, 6, 4); ctx.fill();
+  } else {
+    ctx.fillStyle = '#2b2b2b'; ell(x + 8, y - 142, 3.2, 3.8); ctx.fill(); ell(x + 21, y - 142, 3.2, 3.8); ctx.fill();
+    ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(x + 13, y - 130, 8, Math.PI * .15, Math.PI * .85); ctx.stroke();
+  }
+  ctx.fillStyle = 'rgba(255,130,130,.4)';
+  ell(x - 8, y - 128, 5, 3.5); ctx.fill(); ell(x + 28, y - 128, 5, 3.5); ctx.fill();
+}
+
+/* the princess: blonde pigtails, pink dress, little tiara */
+function drawKidGirl(x, y){
+  const celebrate = win;
+  const bounce = celebrate ? Math.abs(Math.sin(t * 6)) * 14 : 0;
+  y -= bounce;
+  shadow(x, y + bounce + 6, 46);
+  /* bare legs + pink shoes */
+  ctx.fillStyle = '#f7c59f';
+  rr(x - 15, y - 40, 12, 37, 6); ctx.fill(); rr(x + 3, y - 40, 12, 37, 6); ctx.fill();
+  ctx.fillStyle = '#ff5f8f';
+  ell(x - 9, y - 3, 15, 8); ctx.fill(); ell(x + 9, y - 3, 15, 8); ctx.fill();
+  /* pink A-line dress: bodice + wide skirt */
+  ctx.fillStyle = '#ff8fb5';
+  ctx.beginPath();
+  ctx.moveTo(x - 22, y - 74); ctx.lineTo(x + 22, y - 74);
+  ctx.lineTo(x + 44, y - 30); ctx.lineTo(x - 44, y - 30); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#e86a9c'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.fillStyle = '#ff8fb5'; rr(x - 23, y - 112, 46, 42, 13); ctx.fill();
+  ctx.strokeStyle = '#e86a9c'; ctx.lineWidth = 3; rr(x - 23, y - 112, 46, 42, 13); ctx.stroke();
+  ctx.fillStyle = '#ffd1e3'; rr(x - 44, y - 38, 88, 9, 4); ctx.fill();       // hem trim
+  ctx.fillStyle = '#ffe08a'; ell(x, y - 70, 5.5, 5.5); ctx.fill();           // little gem
+  /* arms (same stretchy skin as the boy) */
+  if (celebrate){
+    line(x - 18, y - 104, x - 42, y - 148 - Math.sin(t * 8) * 6, 12, '#f7c59f');
+    line(x + 20, y - 104, x + 46, y - 150 + Math.sin(t * 8) * 6, 12, '#f7c59f');
+    ctx.fillStyle = '#f7c59f';
+    ell(x - 44, y - 152 - Math.sin(t * 8) * 6, 8, 8); ctx.fill();
+    ell(x + 48, y - 154 + Math.sin(t * 8) * 6, 8, 8); ctx.fill();
+  } else {
+    ctx.strokeStyle = '#f7c59f'; ctx.lineWidth = 12; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x - 18, y - 102); ctx.quadraticCurveTo(x - 36, y - 88, x - 32, y - 66); ctx.stroke();
+    ctx.fillStyle = '#f7c59f'; ell(x - 32, y - 64, 8, 8); ctx.fill();
+  }
+  /* back pigtails (behind head) */
+  ctx.fillStyle = '#f2c94c';
+  ell(x - 26, y - 128, 11, 20); ctx.fill(); ell(x + 30, y - 128, 11, 20); ctx.fill();
+  ctx.fillStyle = '#ff5f8f';
+  ell(x - 26, y - 145, 5, 4); ctx.fill(); ell(x + 30, y - 145, 5, 4); ctx.fill();   // hair ties
+  /* head */
+  ctx.fillStyle = '#f7c59f'; ell(x + 2, y - 138, 28, 28); ctx.fill();
+  ctx.strokeStyle = '#dd9c66'; ctx.lineWidth = 2.5; ell(x + 2, y - 138, 28, 28); ctx.stroke();
+  /* blonde hair cap + bangs */
+  ctx.fillStyle = '#ffd35e';
+  ctx.beginPath(); ctx.arc(x + 2, y - 140, 28, Math.PI * 1.0, Math.PI * 2.0); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x - 26, y - 140);
+  ctx.quadraticCurveTo(x + 2, y - 126, x + 30, y - 140);
+  ctx.quadraticCurveTo(x + 20, y - 150, x + 2, y - 150);
+  ctx.quadraticCurveTo(x - 16, y - 150, x - 26, y - 140); ctx.closePath(); ctx.fill();
+  /* tiara */
+  ctx.fillStyle = '#ffd166'; ctx.strokeStyle = '#e0a83a'; ctx.lineWidth = 1.5;
+  for (const tx of [-12, 0, 12]){
+    ctx.beginPath(); ctx.moveTo(x + 2 + tx - 6, y - 158); ctx.lineTo(x + 2 + tx, y - 170);
+    ctx.lineTo(x + 2 + tx + 6, y - 158); ctx.closePath(); ctx.fill(); ctx.stroke();
+  }
+  ctx.fillStyle = '#ff5f8f'; ell(x + 2, y - 168, 3, 3); ctx.fill();
+  drawKidFace(x, y);
+}
+
+function drawKidBoy(x, y){
   const celebrate = win;
   const bounce = celebrate ? Math.abs(Math.sin(t * 6)) * 14 : 0;
   y -= bounce;
@@ -722,25 +842,7 @@ function drawKid(x, y){
   ell(x - 20, y - 140, 8, 12); ctx.fill();
   ctx.beginPath(); ctx.moveTo(x + 6, y - 168); ctx.quadraticCurveTo(x + 14, y - 182, x + 24, y - 172);
   ctx.quadraticCurveTo(x + 14, y - 172, x + 10, y - 164); ctx.closePath(); ctx.fill();
-  const m = kidMood;
-  if (m === 'oops'){
-    ctx.fillStyle = '#fff'; ell(x + 6, y - 142, 7, 8); ctx.fill(); ell(x + 20, y - 142, 7, 8); ctx.fill();
-    ctx.fillStyle = '#2b2b2b'; ell(x + 6, y - 141, 3, 3.5); ctx.fill(); ell(x + 20, y - 141, 3, 3.5); ctx.fill();
-    ell(x + 12, y - 122, 6, 8); ctx.fill();
-  } else if (m === 'yay' || m === 'grin'){
-    ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 3; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.arc(x + 6, y - 143, 5, Math.PI, 0); ctx.stroke();
-    ctx.beginPath(); ctx.arc(x + 20, y - 143, 5, Math.PI, 0); ctx.stroke();
-    ctx.fillStyle = '#8c3b2e';
-    ctx.beginPath(); ctx.arc(x + 12, y - 128, 10, 0, Math.PI); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#ff9d9d'; ell(x + 12, y - 121, 6, 4); ctx.fill();
-  } else {
-    ctx.fillStyle = '#2b2b2b'; ell(x + 8, y - 142, 3.2, 3.8); ctx.fill(); ell(x + 21, y - 142, 3.2, 3.8); ctx.fill();
-    ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 3; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.arc(x + 13, y - 130, 8, Math.PI * .15, Math.PI * .85); ctx.stroke();
-  }
-  ctx.fillStyle = 'rgba(255,130,130,.4)';
-  ell(x - 8, y - 128, 5, 3.5); ctx.fill(); ell(x + 28, y - 128, 5, 3.5); ctx.fill();
+  drawKidFace(x, y);
 }
 
 function drawParent(h){
@@ -877,25 +979,48 @@ function drawDog(h){
   }
 }
 
-function drawBug(h){
+function drawBug(h){                       /* a hoppy little grasshopper */
   const c = h._c;
   const dx = h.x2 - h.x1, dy = h.y2 - h.y1;
   const dirSign = h._fwd ? 1 : -1;
   const ang = Math.atan2(dy * dirSign, dx * dirSign) + Math.PI / 2;
   ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(ang);
-  ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 3; ctx.lineCap = 'round';
-  for (const side of [-1, 1]) for (let i = 0; i < 3; i++){
-    const wig = Math.sin(t * 18 + i * 2 + side) * 2.5;
-    ctx.beginPath(); ctx.moveTo(side * 9, -7 + i * 8); ctx.lineTo(side * 18, -11 + i * 8 + wig); ctx.stroke();
+  const hop = Math.abs(Math.sin(t * 6)) * 3;            // gentle bobbing
+  ctx.translate(0, -hop);
+  ctx.lineCap = 'round';
+  /* antennae */
+  ctx.strokeStyle = '#2e6b2e'; ctx.lineWidth = 2;
+  for (const s of [-1, 1]){
+    const wig = Math.sin(t * 12 + s) * 3;
+    ctx.beginPath(); ctx.moveTo(s * 3, -18); ctx.quadraticCurveTo(s * 8, -30, s * 9 + wig, -38); ctx.stroke();
+    ctx.fillStyle = '#2e6b2e'; ell(s * 9 + wig, -38, 2, 2); ctx.fill();
   }
-  ctx.fillStyle = '#2b2b2b'; ell(0, -15, 8, 7); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(-4, -20); ctx.lineTo(-8, -28); ctx.moveTo(4, -20); ctx.lineTo(8, -28); ctx.stroke();
-  ctx.fillStyle = '#2b2b2b'; ell(-8, -28, 2, 2); ctx.fill(); ell(8, -28, 2, 2); ctx.fill();
-  ctx.fillStyle = '#e8453c'; ell(0, 2, 13, 17); ctx.fill();
-  ctx.strokeStyle = '#a82c22'; ctx.lineWidth = 2.5; ell(0, 2, 13, 17); ctx.stroke();
-  line(0, -12, 0, 18, 2.5, '#a82c22');
-  ctx.fillStyle = '#2b2b2b';
-  [[-6, -4], [6, -2], [-5, 9], [6, 11]].forEach(([px, py]) => { ell(px, py, 2.8, 2.8); ctx.fill(); });
+  /* front + middle legs */
+  ctx.strokeStyle = '#2e7d32'; ctx.lineWidth = 2.5;
+  for (const s of [-1, 1]) for (const ly of [-6, 2]){
+    const wig = Math.sin(t * 14 + ly + s) * 2;
+    ctx.beginPath(); ctx.moveTo(s * 6, ly); ctx.lineTo(s * 14, ly + 6 + wig); ctx.stroke();
+  }
+  /* big bent hind legs — the grasshopper's signature */
+  ctx.strokeStyle = '#3f8f3d';
+  for (const s of [-1, 1]){
+    const kick = Math.sin(t * 6) * 2;
+    ctx.lineWidth = 6;   ctx.beginPath(); ctx.moveTo(s * 6, 4);  ctx.lineTo(s * 17, 15 + kick); ctx.stroke();
+    ctx.lineWidth = 3.5; ctx.beginPath(); ctx.moveTo(s * 17, 15 + kick); ctx.lineTo(s * 12, -6 + kick); ctx.stroke();
+  }
+  /* body + wing */
+  ctx.fillStyle = '#6cc45e'; ell(0, 3, 8, 16); ctx.fill();
+  ctx.strokeStyle = '#3f8f3d'; ctx.lineWidth = 2.5; ell(0, 3, 8, 16); ctx.stroke();
+  line(-1, -6, 3, 16, 2, '#4fa347');
+  /* pronotum + head */
+  ctx.fillStyle = '#5cb64f'; ell(0, -12, 7, 6); ctx.fill();
+  ctx.fillStyle = '#6cc45e'; ell(0, -18, 6.5, 7); ctx.fill();
+  ctx.strokeStyle = '#3f8f3d'; ctx.lineWidth = 2; ell(0, -18, 6.5, 7); ctx.stroke();
+  /* eyes + smile */
+  ctx.fillStyle = '#2b2b2b'; ell(-3.5, -20, 2.6, 3); ctx.fill(); ell(3.5, -20, 2.6, 3); ctx.fill();
+  ctx.fillStyle = '#fff'; ell(-4, -21, 1, 1); ctx.fill(); ell(3, -21, 1, 1); ctx.fill();
+  ctx.strokeStyle = '#2e6b2e'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(0, -16, 3, Math.PI * .15, Math.PI * .85); ctx.stroke();
   ctx.restore();
 }
 
@@ -1150,6 +1275,15 @@ document.getElementById('homeBtn').addEventListener('click', () => { sndClick();
 document.getElementById('sndBtn').addEventListener('click', function(){
   muted = !muted; this.textContent = muted ? '🔇' : '🔊'; if (!muted){ initAudio(); sndClick(); }
 });
+const avBtns = document.querySelectorAll('#avPick .avbtn');
+function renderAvPick(){ avBtns.forEach(b => b.classList.toggle('sel', b.dataset.av === avatar)); }
+avBtns.forEach(b => b.addEventListener('click', () => {
+  initAudio(); sndClick();
+  avatar = b.dataset.av;
+  try { localStorage.setItem('tiptoe-avatar', avatar); } catch (e) {}
+  renderAvPick();
+}));
+renderAvPick();
 
 /* ---------------------------------- boot ----------------------------------- */
 function fit(){
